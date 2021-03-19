@@ -43,3 +43,8 @@ with tf.Session(config=config) as sess:
 
     train_copynet_iter(copy_model, train_dsl, val_dsl, test_dsl, sess)
 
+"""
+To run this program in the background:
+$ nohup python generic_program_v2.py > nsfw_vgg16_log.output 2>&1 &
+"""
+
