@@ -36,11 +36,11 @@ flags = tf.app.flags
 # Model Hyperparameters
 tf.flags.DEFINE_float("dropout_keep_prob", 0.5, "Dropout keep probability")
 tf.flags.DEFINE_float("l2_reg_lambda", 0.001, "L2 regularization lambda")
-tf.flags.DEFINE_float("learning_rate", 0.00001, "learning rate")
+tf.flags.DEFINE_float("learning_rate", 0.0001, "learning rate")
 tf.flags.DEFINE_string("optimizer", "adam", "Custom optimizer")
 
 # Training parameters
-tf.flags.DEFINE_integer("batch_size", 16, "Batch Size (default: 50)")
+tf.flags.DEFINE_integer("batch_size", 32, "Batch Size (default: 50)")
 tf.flags.DEFINE_integer("num_epochs", 2, "Number of training epochs (default: 100)")
 tf.flags.DEFINE_integer("copy_num_epochs", 100, "Number of training epochs (default: 1000)")
 tf.flags.DEFINE_integer("evaluate_every", 1, "Evaluate model on dev set after this many steps (default: 1)")
@@ -76,7 +76,7 @@ tf.flags.DEFINE_integer("subsampling_end_batch", 1, "End Batch of imagenet to us
 
 tf.flags.DEFINE_integer("num_to_keep", None, "Number of samples to make use of for imagenet")
 
-tf.flags.DEFINE_integer("initial_seed", 50000, "initial seed")
+tf.flags.DEFINE_integer("initial_seed", 20000, "initial seed")
 tf.flags.DEFINE_integer("num_iter", 1000, "num of iterations")
 tf.flags.DEFINE_integer("k", 1000, "add queries")
 
