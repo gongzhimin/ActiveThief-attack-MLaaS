@@ -36,7 +36,7 @@ flags = tf.app.flags
 # Model Hyperparameters
 tf.flags.DEFINE_float("dropout_keep_prob", 0.5, "Dropout keep probability")
 tf.flags.DEFINE_float("l2_reg_lambda", 0.001, "L2 regularization lambda")
-tf.flags.DEFINE_float("learning_rate", 0.0001, "learning rate")
+tf.flags.DEFINE_float("learning_rate", 0.00001, "learning rate")
 tf.flags.DEFINE_string("optimizer", "adam", "Custom optimizer")
 
 # Training parameters
@@ -57,7 +57,7 @@ tf.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on 
 tf.flags.DEFINE_integer("num_checkpoints", 5, "Number of checkpoints to store (default: 5)")
 
 # tf.flags.DEFINE_string("source_model", "cnn_3_2",  "Source model type(eg DeepCNN/DNN) to copy")
-tf.flags.DEFINE_string("copy_model", "vgg16",  "Copy model type(eg DeepCNN/DNN)")
+tf.flags.DEFINE_string("copy_model", "vgg16", "Copy model type(eg DeepCNN/DNN)")
 # tf.flags.DEFINE_string("true_dataset", "raf",  "Source model will be trained on this")
 tf.flags.DEFINE_string("noise_dataset", "nsfw", "Source model will be copied using this")
 tf.flags.DEFINE_integer("img_size", 224, "the size of resize operation")
@@ -100,7 +100,7 @@ tf.flags.DEFINE_integer("ntest", 1000, "number of test samples in nsfw's per cla
 
 cfg = tf.app.flags.FLAGS
 
-config                          = tf.ConfigProto()
+config = tf.ConfigProto()
 config.gpu_options.allow_growth = cfg.allow_gpu_growth
-config.log_device_placement     = cfg.log_device_placement
-config.allow_soft_placement     = cfg.allow_soft_placement
+config.log_device_placement = cfg.log_device_placement
+config.allow_soft_placement = cfg.allow_soft_placement
