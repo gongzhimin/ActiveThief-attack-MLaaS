@@ -30,7 +30,7 @@ def save_metrics(budget=None, train_acc=None, train_loss=None, test_acc=None, te
     test_loss_list = metrics_dict["test_loss_list"]
 
     if budget:
-        budget_list.append(k)
+        budget_list.append(budget)
 
     if train_acc:
         train_acc = float(train_acc)
