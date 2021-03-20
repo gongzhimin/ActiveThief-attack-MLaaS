@@ -267,6 +267,7 @@ class vgg16:
 class Vgg16Wrapper(vgg16):
     def __init__(self):
         self.imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
+        self.vgg17_weights_file = 'tensorflow_vgg16/vgg17_weights.npz'
         vgg16.__init__(self, self.imgs, 'tensorflow_vgg16/vgg16_weights.npz')
 
         with tf.name_scope('loss') as scope:
@@ -288,7 +289,6 @@ class Vgg16Wrapper(vgg16):
 
     def save_weights(self, sess):
         weights = {}
-        self.vgg17_weights_file = 'tensorflow_vgg16/vgg17_weights.npz'
         for var in self.parameters:
             name = var.name
             name_list = name.split("/")
@@ -312,6 +312,13 @@ class Vgg16Wrapper(vgg16):
                  fc1_W=weights['fc1_W'], fc1_b=weights['fc1_b'], fc2_W=weights['fc2_W'], fc2_b=weights['fc2_b'],
                  fc3_W=weights['fc3_W'], fc3_b=weights['fc3_b'], fc4_W=weights['fc4_W'], fc4_b=weights['fc4_b'])
 
+
+    def load_vgg17_weights(self, sess):
+        weights = np.load(self.vgg17_weights_file)
+        keys = sorted(weights.keys())
+        for i, k in enumerate(keys):
+            print i, k, np.shape(weights[k])
+            sess.run(self.parameters[i].assign(weights[k]))
 
 if __name__ == "__main__":
     with tf.Session(config=config) as sess:
