@@ -112,18 +112,16 @@ def compute_evaluation_measure(model, sess, dsl, measure=None, use_aux=False, re
 
         X = load_imgs(X)
 
-        if cfg.copy_model == "vgg19":
-            measure_val, pred, loss = model.get_sum_correct_prediction_in_batch(sess, X, Y)
-        else:
-            measure_val, pred, loss = sess.run(
-                [measure, model.predictions, model.mean_loss],
-                feed_dict={
-                    model.X: X,
-                    model.labels: Y,
-                    model.train_mode: False,
-                    model.dropout_keep_prob: 1.0
-                }
-            )
+        measure_val, pred, loss = sess.run(
+            [measure, model.predictions, model.mean_loss],
+            feed_dict={
+                model.X: X,
+                model.labels: Y,
+                model.train_mode: False,
+                model.dropout_keep_prob: 1.0
+            }
+        )
+
 
 
         preds.append(pred)

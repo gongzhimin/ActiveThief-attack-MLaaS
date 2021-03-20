@@ -1,6 +1,5 @@
 import os
 import json
-import random
 import datetime
 import matplotlib.pyplot as plt
 
@@ -52,7 +51,7 @@ def save_metrics(budget=None, train_acc=None, train_loss=None, test_acc=None, te
         json.dump(metrics_dict, f, ensure_ascii=False)
 
 
-def display_comparison_chart(train_metric_list, test_metric_list, k_list,
+def display_comparison_chart(train_metric_list, test_metric_list, budget_list,
                              title=None, axis_labels=None, line_labels=None, max_index_list=None):
     x = list(range(len(train_metric_list)))
     fig = plt.figure(figsize=(9, 6))
@@ -63,12 +62,13 @@ def display_comparison_chart(train_metric_list, test_metric_list, k_list,
     test_line = ax.plot(x, test_metric_list, color="darkblue",
                         linewidth=1, linestyle="-", label=line_labels[1])
 
-    k_ax = ax.twinx()
-    k_ax.set_ylabel("sample number", fontsize=14)
-    k_line = k_ax.plot(x, k_list, color="olive",
-                       linewidth=1, linestyle="-", label=line_labels[2])
+    budget_ax = ax.twinx()
+    budget_ax.set_ylabel("sample number", fontsize=14)
+    budget_line = budget_ax.plot(x, budget_list, color="olive",
+                                 linewidth=1, linestyle="-", label=line_labels[2])
+    budget_ax.set_ylim(10000, 50000)
 
-    lines = train_line + test_line + k_line
+    lines = train_line + test_line + budget_line
     ax.legend(lines, line_labels, loc=0)
 
     for max_index in max_index_list:
@@ -76,13 +76,13 @@ def display_comparison_chart(train_metric_list, test_metric_list, k_list,
         ax.annotate("{:.4f}".format(train_metric_list[max_index]), xy=(x[max_index], train_metric_list[max_index]))
         ax.plot(x[max_index], test_metric_list[max_index], color="darkblue", marker="P")
         ax.annotate("{:.4f}".format(test_metric_list[max_index]), xy=(x[max_index], test_metric_list[max_index]))
-        k_ax.plot(x[max_index], k_list[max_index], color="olive", marker="P")
-        k_ax.annotate(str(k_list[max_index]), xy=(x[max_index], k_list[max_index]))
+        budget_ax.plot(x[max_index], budget_list[max_index], color="olive", marker="P")
+        budget_ax.annotate(str(budget_list[max_index]), xy=(x[max_index], budget_list[max_index]))
 
     ax.set_title(title, fontsize=16)
     ax.set_xlabel(axis_labels[0], fontsize=14)
     ax.set_ylabel(axis_labels[1], fontsize=14)
-    ax.set_xticks(range(0, len(x) + 1, 1))
+    ax.set_xticks(range(0, len(x) + 1, 10))
 
     filename = "_".join(title.replace(",", "").split(" "))
     current_time = "_".join(str(datetime.datetime.now()).split(".")[0].replace(":", "-").split(" "))
@@ -90,6 +90,7 @@ def display_comparison_chart(train_metric_list, test_metric_list, k_list,
     plt.savefig(filename, format="svg")
 
     plt.show()
+
 
 
 def get_max_index(metric_list):
@@ -123,33 +124,16 @@ def plot_metrics():
 
     max_index_list = get_max_index(test_acc_list)
 
-    title = "S1, S2 Comparison Chart"
-    axis_labels = ["iteration", "similarity (accuracy)"]
+    title = "S1, S2 Comparison (NSFW, pretrained-imagenet-vgg16)"
+    axis_labels = ["epoch", "similarity (accuracy)"]
     line_labels = ["S1", "S2", "budget"]
     display_comparison_chart(train_acc_list, test_acc_list, budget_list, title, axis_labels, line_labels, max_index_list)
 
-    title = "Train Loss, Test Loss Comparison Chart"
-    axis_labels = ["iteration", "loss"]
+    title = "Train Loss, Test Loss Comparison (NSFW, pretrained-imagenet-vgg16)"
+    axis_labels = ["epoch", "loss"]
     line_labels = ["train loss", "test loss", "budget"]
     display_comparison_chart(train_loss_list, test_loss_list, budget_list, title, axis_labels, line_labels, max_index_list)
 
 
 def clear_metrics():
     os.remove(metrics_dir)
-
-if __name__ == "__main__":
-    for i in range(20):
-        train_acc = random.random() + 1
-        train_loss = random.random() * 2.0
-        test_acc = random.random()
-        test_loss = random.random() * 2.0 + 2
-
-        if i == 19:
-            break
-        k = random.random() * 100.0
-
-        save_metrics(k=k,
-                     train_acc=train_acc, train_loss=train_loss,
-                     test_acc=test_acc, test_loss=test_loss)
-
-    plot_metrics()

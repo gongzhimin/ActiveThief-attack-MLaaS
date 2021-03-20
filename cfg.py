@@ -40,7 +40,7 @@ tf.flags.DEFINE_float("learning_rate", 0.00001, "learning rate")
 tf.flags.DEFINE_string("optimizer", "adam", "Custom optimizer")
 
 # Training parameters
-tf.flags.DEFINE_integer("batch_size", 32, "Batch Size (default: 50)")
+tf.flags.DEFINE_integer("batch_size", 128, "Batch Size (default: 50)")
 tf.flags.DEFINE_integer("num_epochs", 2, "Number of training epochs (default: 100)")
 tf.flags.DEFINE_integer("copy_num_epochs", 100, "Number of training epochs (default: 1000)")
 tf.flags.DEFINE_integer("evaluate_every", 1, "Evaluate model on dev set after this many steps (default: 1)")
