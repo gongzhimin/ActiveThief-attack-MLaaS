@@ -146,6 +146,8 @@ def train_copynet_iter(copy_model, train_dsl, valid_dsl, test_dsl, sess):
         no_improvement = 0
 
         for epoch in range(cfg.copy_num_epochs):
+            if it == 2 and epoch == 5:
+                copy_model.save_weights(sess)
             t_loss = []
             t_acc = []
             epoch_time = time.time()

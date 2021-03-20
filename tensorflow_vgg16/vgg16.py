@@ -12,7 +12,7 @@ import numpy as np
 import tensorflow as tf
 from scipy.misc import imread, imresize
 
-from cfg import cfg
+from cfg import cfg, config
 
 
 class vgg16:
@@ -23,7 +23,7 @@ class vgg16:
         self.probs = tf.nn.softmax(self.fc4l)
 
         assert weights is not None
-        self.weight = weights
+        self.vgg16_weights_file = weights
 
     def convlayers(self):
         self.parameters = []
@@ -257,14 +257,14 @@ class vgg16:
             self.parameters += [fc4w, fc4b]
 
     def load_weights(self, sess):
-        weights = np.load(self.weight)
+        weights = np.load(self.vgg16_weights_file)
         keys = sorted(weights.keys())
         for i, k in enumerate(keys):
             print i, k, np.shape(weights[k])
             sess.run(self.parameters[i].assign(weights[k]))
 
 
-class Vgg16Wraper(vgg16):
+class Vgg16Wrapper(vgg16):
     def __init__(self):
         self.imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
         vgg16.__init__(self, self.imgs, 'tensorflow_vgg16/vgg16_weights.npz')
@@ -286,25 +286,38 @@ class Vgg16Wraper(vgg16):
                 self.optimizer = tf.train.GradientDescentOptimizer(learning_rate=cfg.learning_rate)
             self.train_op = self.optimizer.minimize(self.loss, global_step=self.global_step)
 
+    def save_weights(self, sess):
+        weights = {}
+        self.vgg17_weights_file = 'tensorflow_vgg16/vgg17_weights.npz'
+        for var in self.parameters:
+            name = var.name
+            name_list = name.split("/")
+            if name_list[1] == "biases:0":
+                name = "_".join([name_list[0], "b"])
+            elif name_list[1] == "weights:0":
+                name = "_".join([name_list[0], "W"])
+            else:
+                raise Exception("No such parameter: {}".format(name))
+            value = sess.run(var)
+            weights[name] = value
+        np.savez(self.vgg17_weights_file, conv1_1_W=weights['conv1_1_W'], conv1_1_b=weights['conv1_1_b'],
+                 conv1_2_W=weights['conv1_2_W'], conv1_2_b=weights['conv1_2_b'], conv2_1_W=weights['conv2_1_W'],
+                 conv2_1_b=weights['conv2_1_b'], conv2_2_W=weights['conv2_2_W'], conv2_2_b=weights['conv2_2_b'],
+                 conv3_1_W=weights['conv3_1_W'], conv3_1_b=weights['conv3_1_b'], conv3_2_W=weights['conv3_2_W'],
+                 conv3_2_b=weights['conv3_2_b'], conv3_3_W=weights['conv3_3_W'], conv3_3_b=weights['conv3_3_b'],
+                 conv4_1_W=weights['conv4_1_W'], conv4_1_b=weights['conv4_1_b'], conv4_2_W=weights['conv4_2_W'],
+                 conv4_2_b=weights['conv4_2_b'], conv4_3_W=weights['conv4_3_W'], conv4_3_b=weights['conv4_3_b'],
+                 conv5_1_W=weights['conv5_1_W'], conv5_1_b=weights['conv5_1_b'], conv5_2_W=weights['conv5_2_W'],
+                 conv5_2_b=weights['conv5_2_b'], conv5_3_W=weights['conv5_3_W'], conv5_3_b=weights['conv5_3_b'],
+                 fc1_W=weights['fc1_W'], fc1_b=weights['fc1_b'], fc2_W=weights['fc2_W'], fc2_b=weights['fc2_b'],
+                 fc3_W=weights['fc3_W'], fc3_b=weights['fc3_b'], fc4_W=weights['fc4_W'], fc4_b=weights['fc4_b'])
 
-if __name__ == '__main__':
-    sess = tf.Session()
-    imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
 
-    vgg = vgg16(imgs, 'vgg16_weights.npz', sess)
-
-    img1 = imread('laska.png', mode='RGB')
-    img1 = imresize(img1, (224, 224))
-
-    # prob = sess.run(vgg.probs, feed_dict={vgg.imgs: [img1]})[0]
-    # preds = (np.argsort(prob)[::-1])[0:5]
-
-    true_out_op = tf.placeholder(tf.float32, [None, 3])
-    pred_op = tf.argmax(vgg.probs, axis=1)
-    #
-    cross_entropy_op = tf.nn.softmax_cross_entropy_with_logits_v2(labels=true_out_op, logits=vgg.fc4l)
-    loss_op = tf.reduce_mean(cross_entropy_op)
-    train_op = tf.train.GradientDescentOptimizer(0.0001).minimize(loss_op)
-    img_true_result = [1 if i == 1 else 0 for i in range(3)]
-    pred, loss, _ = sess.run([pred_op, loss_op, train_op], feed_dict={imgs: [img1, img1], true_out_op: [img_true_result, img_true_result]})
-
+if __name__ == "__main__":
+    with tf.Session(config=config) as sess:
+        copy_model = Vgg16Wrapper()
+        sess.run(tf.global_variables_initializer())
+        copy_model.vgg16_weights_file = 'vgg16_weights.npz'
+        copy_model.load_weights(sess)
+        copy_model.vgg17_weights_file = 'vgg17_weights.npz'
+        copy_model.save_weights(sess)

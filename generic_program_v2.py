@@ -36,8 +36,8 @@ test_dsl  = dataset_dsl(batch_size = cfg.batch_size, mode='test', shuffle_each_e
 tf.set_random_seed(cfg.seed)
 
 with tf.Session(config=config) as sess:
-    from tensorflow_vgg16.vgg16 import Vgg16Wraper
-    copy_model = Vgg16Wraper()
+    from tensorflow_vgg16.vgg16 import Vgg16Wrapper
+    copy_model = Vgg16Wrapper()
     sess.run(tf.global_variables_initializer())
     copy_model.load_weights(sess)
 

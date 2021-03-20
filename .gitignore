@@ -9,3 +9,4 @@ logdir/*
 tensorflow_vgg16/vgg16_weights.npz
 *.json
 *.ipynb
+git

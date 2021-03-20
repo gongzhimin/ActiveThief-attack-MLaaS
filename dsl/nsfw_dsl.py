@@ -102,8 +102,6 @@ class NSFWDSL(BaseDSL):
 
         self.label_dict = self.create_label_dict()
 
-
-
         # Perform splitting
         if val_frac is not None:
             self.partition_validation_set(mode, val_frac)
