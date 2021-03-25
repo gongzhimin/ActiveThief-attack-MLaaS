@@ -76,7 +76,7 @@ tf.flags.DEFINE_integer("subsampling_end_batch", 1, "End Batch of imagenet to us
 
 tf.flags.DEFINE_integer("num_to_keep", None, "Number of samples to make use of for imagenet")
 
-tf.flags.DEFINE_integer("initial_seed", 20000, "initial seed")
+tf.flags.DEFINE_integer("initial_seed", 40000, "initial seed")
 tf.flags.DEFINE_integer("num_iter", 1000, "num of iterations")
 tf.flags.DEFINE_integer("k", 1000, "add queries")
 
@@ -96,7 +96,7 @@ tf.flags.DEFINE_string("dataset_dir", "dataset_dir", "Directory for datasets")
 tf.flags.DEFINE_string("mode", None, "Nothing")
 tf.flags.DEFINE_integer("DS_SEED", 727, "Dataset seed for nsfw")
 tf.flags.DEFINE_integer("num_classes", 3, "num_classes of dataset")
-tf.flags.DEFINE_integer("ntest", 1000, "number of test samples in nsfw's per class")
+tf.flags.DEFINE_integer("ntest", 2000, "number of test samples in nsfw's per class")
 
 cfg = tf.app.flags.FLAGS
 

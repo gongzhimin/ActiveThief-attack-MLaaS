@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from cfg import cfg
 
-metrics_filename = "{}_{}_metrics.json".format(cfg.noise_dataset, cfg.copy_model)
+metrics_filename = "{}_{}_{}_{}_metrics.json".format(cfg.noise_dataset, cfg.copy_model, cfg.initial_seed, cfg.ntest)
 metrics_dir = os.path.join(cfg.noise_dataset, metrics_filename)
 
 
